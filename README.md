@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Reinforcement Learning with Augmented Data (RAD)
 
 Official codebase for [Reinforcement Learning with Augmented Data](https://mishalaskin.github.io/rad). This codebase was originally forked from [CURL](https://mishalaskin.github.io/curl). 
@@ -77,3 +78,7 @@ tensorboard --logdir log --port 6006
 
 and go to `localhost:6006` in your browser. If you're running headlessly, try port forwarding with ssh.
 
+=======
+# RL Random Augmentation
+Understanding how to improve RL algorithm performance through randomized data augmentation.
+>>>>>>> f551a50067240c97de85bfe2c8076e1c6ae3a280
