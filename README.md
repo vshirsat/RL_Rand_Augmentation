@@ -1,1 +1,2 @@
-# RL_Rand_Augmentation
+# RL Random Augmentation
+Understanding how to improve RL algorithm performance through randomized data augmentation.
