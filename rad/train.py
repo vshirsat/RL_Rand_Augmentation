@@ -10,6 +10,7 @@ import time
 import json
 import dmc2gym
 import copy
+from pathlib import Path
 
 import utils
 from logger import Logger
@@ -220,7 +221,7 @@ def main():
     buffer_dir = utils.make_dir(os.path.join(args.work_dir, 'buffer'))
 
     video = VideoRecorder(video_dir if args.save_video else None)
-
+    
     with open(os.path.join(args.work_dir, 'args.json'), 'w') as f:
         json.dump(vars(args), f, sort_keys=True, indent=4)
 
