@@ -236,7 +236,22 @@ def random_color_jitter(imgs):
     imgs = transform_module(imgs).view(b,c,h,w)
     return imgs
 
-# new data augmentation
+def random_translate(imgs, size, return_random_idxs=False, h1s=None, w1s=None):
+    n, c, h, w = imgs.shape
+    assert size >= h and size >= w
+    outs = np.zeros((n, c, size, size), dtype=imgs.dtype)
+    h1s = np.random.randint(0, size - h + 1, n) if h1s is None else h1s
+    w1s = np.random.randint(0, size - w + 1, n) if w1s is None else w1s
+    for out, img, h1, w1 in zip(outs, imgs, h1s, w1s):
+        out[:, h1:h1 + h, w1:w1 + w] = img
+    if return_random_idxs:  # So can do the same to another set of imgs.
+        return outs, dict(h1s=h1s, w1s=w1s)
+    return outs
+
+
+####################
+### NEW DATA AUGS
+####################
 def random_static_cutout(imgs, min_cut=10,max_cut=30):
     """
         args:
@@ -274,17 +289,63 @@ def random_static_cutout(imgs, min_cut=10,max_cut=30):
 
 
 
-def random_translate(imgs, size, return_random_idxs=False, h1s=None, w1s=None):
+def random_invert_cutout(imgs, min_cut=10,max_cut=30):
+    """
+        args:
+        imgs: shape (B,C,H,W)
+        out: output size (e.g. 84)
+    """
+    
     n, c, h, w = imgs.shape
-    assert size >= h and size >= w
-    outs = np.zeros((n, c, size, size), dtype=imgs.dtype)
-    h1s = np.random.randint(0, size - h + 1, n) if h1s is None else h1s
-    w1s = np.random.randint(0, size - w + 1, n) if w1s is None else w1s
-    for out, img, h1, w1 in zip(outs, imgs, h1s, w1s):
-        out[:, h1:h1 + h, w1:w1 + w] = img
-    if return_random_idxs:  # So can do the same to another set of imgs.
-        return outs, dict(h1s=h1s, w1s=w1s)
-    return outs
+    w1 = np.random.randint(min_cut, max_cut, n)
+    h1 = np.random.randint(min_cut, max_cut, n)
+    
+    cutouts = np.empty((n, c, h, w), dtype=imgs.dtype)
+
+    for i, (img, w11, h11) in enumerate(zip(imgs, w1, h1)):
+        cut_img = img.copy()
+        rand_box = np.random.rand(n, c) * 255
+        
+        # add random box
+        box_shape = (1,) + cut_img[:, h11:h11 + h11, w11:w11 + w11].shape[1:]
+        invert_box = 255 - cut_img[:, h11:h11 + h11, w11:w11 + w11] 
+        
+        cut_img[:, h11:h11 + h11, w11:w11 + w11] = invert_box
+
+        cutouts[i] = cut_img
+
+    return cutouts
+
+
+
+def random_inv_norm_cutout(imgs, min_cut=10,max_cut=30):
+    """
+        args:
+        imgs: shape (B,C,H,W)
+        out: output size (e.g. 84)
+    """
+    
+    n, c, h, w = imgs.shape
+    w1 = np.random.randint(min_cut, max_cut, n)
+    h1 = np.random.randint(min_cut, max_cut, n)
+    
+    cutouts = np.empty((n, c, h, w), dtype=imgs.dtype)
+
+    for i, (img, w11, h11) in enumerate(zip(imgs, w1, h1)):
+        cut_img = img.copy()
+        rand_box = np.random.rand(n, c) * 255
+        
+        inv_img = 255 - cut_img 
+        
+        # add random box
+        box_shape = (1,) + cut_img[:, h11:h11 + h11, w11:w11 + w11].shape[1:]
+        norm_box = img[:, h11:h11 + h11, w11:w11 + w11] 
+        
+        inv_img[:, h11:h11 + h11, w11:w11 + w11] = norm_box
+
+        cutouts[i] = inv_img
+
+    return cutouts
 
 
 def no_aug(x):

@@ -291,7 +291,9 @@ class RadSacAgent(object):
                 'color_jitter':rad.random_color_jitter,
                 'translate':rad.random_translate,
                 'no_aug':rad.no_aug,
-                'rand_static_cutout':rad.random_static_cutout
+                'rand_static_cutout':rad.random_static_cutout,
+                'rand_inv_cutout': rad.random_invert_cutout,
+                'rand_norm_inv_cutout': rad.random_inv_norm_cutout
             }
 
         for aug_name in self.data_augs.split('-'):
