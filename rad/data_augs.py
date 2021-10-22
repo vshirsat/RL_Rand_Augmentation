@@ -65,8 +65,8 @@ def random_grayscale(images,p=.3):
     out = out.view([bs, -1, h, w]).type(in_type) / 255.
     return out
 
-# random cutout
-# TODO: should mask this 
+
+
 
 def random_cutout(imgs, min_cut=10,max_cut=30):
     """
@@ -236,6 +236,43 @@ def random_color_jitter(imgs):
     imgs = transform_module(imgs).view(b,c,h,w)
     return imgs
 
+# new data augmentation
+def random_static_cutout(imgs, min_cut=10,max_cut=30):
+    """
+        args:
+        imgs: shape (B,C,H,W)
+        out: output size (e.g. 84)
+    """
+    
+    n, c, h, w = imgs.shape
+    w1 = np.random.randint(min_cut, max_cut, n)
+    h1 = np.random.randint(min_cut, max_cut, n)
+    
+    cutouts = np.empty((n, c, h, w), dtype=imgs.dtype)
+
+    # rand_box = np.empty((n, c))
+    # for i in range(n):
+    #     for j in range(c):
+    #         rand_box[i][j] = np.random.randint(0, 255)
+
+    # print(rand_box)
+    for i, (img, w11, h11) in enumerate(zip(imgs, w1, h1)):
+        cut_img = img.copy()
+        rand_box = np.random.rand(n, c) * 255
+        
+        # add random box
+        box_shape = (1,) + cut_img[:, h11:h11 + h11, w11:w11 + w11].shape[1:]
+        
+        rand_box = np.random.rand(box_shape[0], box_shape[1], box_shape[2]) * 255
+        # rand_box = np.empty(
+
+        cut_img[:, h11:h11 + h11, w11:w11 + w11] = rand_box
+
+        cutouts[i] = cut_img
+
+    return cutouts
+
+
 
 def random_translate(imgs, size, return_random_idxs=False, h1s=None, w1s=None):
     n, c, h, w = imgs.shape
@@ -303,6 +340,10 @@ if __name__ == '__main__':
     t = now()
     random_color_jitter(x)
     s8,tot8 = secs(t)
+    # random static cutout 
+    t = now()
+    random_static_cutout(x.cpu().numpy(),10,30)
+    s9,tot9 = secs(t)
     
     print(tabulate([['Crop', s1,tot1], 
                     ['Grayscale', s2,tot2], 
@@ -312,5 +353,6 @@ if __name__ == '__main__':
                     ['Rotate', s6,tot6], 
                     ['Rand Conv', s7,tot7], 
                     ['Color Jitter', s8,tot8]], 
+                    ['Static Cutout', s9, tot9],
                     headers=['Data Aug', 'Time / batch (secs)', 'Time / 100k steps (mins)']))
 

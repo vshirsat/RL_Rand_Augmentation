@@ -10,6 +10,7 @@ import time
 import json
 import dmc2gym
 import copy
+import retro
 from pathlib import Path
 
 import utils
@@ -200,7 +201,7 @@ def main():
         width=pre_transform_image_size,
         frame_skip=args.action_repeat
     )
- 
+    
     env.seed(args.seed)
 
     # stack several consecutive frames together
