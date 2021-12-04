@@ -177,7 +177,6 @@ def make_agent(obs_shape, action_shape, args, device):
             detach_encoder=args.detach_encoder,
             latent_dim=args.latent_dim,
             data_augs=args.data_augs
-
         )
     else:
         assert 'agent is not supported: %s' % args.agent
@@ -268,6 +267,7 @@ def main():
             evaluate(env, agent, video, args.num_eval_episodes, L, step,args)
             if args.save_model:
                 agent.save_curl(model_dir, step)
+                agent.save(model_dir, step)
             if args.save_buffer:
                 replay_buffer.save(buffer_dir)
 
