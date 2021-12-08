@@ -70,13 +70,15 @@ def preprocess_obs(obs, bits=5):
 class ReplayBuffer(Dataset):
     """Buffer to store environment transitions."""
     def __init__(self, obs_shape, action_shape, capacity, batch_size, device,image_size=84, 
-                 pre_image_size=84, transform=None):
+                 pre_image_size=84, min_cut=10, max_cut=30, transform=None):
         self.capacity = capacity
         self.batch_size = batch_size
         self.device = device
         self.image_size = image_size
         self.pre_image_size = pre_image_size # for translation
         self.transform = transform
+        self.min_cut = min_cut # for cutout
+        self.max_cut = max_cut # for cutout
         # the proprioceptive obs is stored as float32, pixels obs as uint8
         obs_dtype = np.float32 if len(obs_shape) == 1 else np.uint8
         
@@ -170,6 +172,9 @@ class ReplayBuffer(Dataset):
                 if 'crop' in aug or 'cutout' in aug:
                     obses = func(obses)
                     next_obses = func(next_obses)
+                elif 'cutout' in aug:
+                    obses = func(obses, self.min_cut, self.max_cut)
+                    next_obses = func(next_obses. self.min_cut, self.max_cut)
                 elif 'translate' in aug: 
                     og_obses = center_crop_images(obses, self.pre_image_size)
                     og_next_obses = center_crop_images(next_obses, self.pre_image_size)

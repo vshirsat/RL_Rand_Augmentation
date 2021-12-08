@@ -68,7 +68,7 @@ def random_grayscale(images,p=.3):
 
 
 
-def random_cutout(imgs, min_cut=10,max_cut=30):
+def random_cutout(imgs, min_cut=10, max_cut=30):
     """
         args:
         imgs: np.array shape (B,C,H,W)
@@ -88,7 +88,7 @@ def random_cutout(imgs, min_cut=10,max_cut=30):
         cutouts[i] = cut_img
     return cutouts
 
-def random_cutout_color(imgs, min_cut=10,max_cut=30):
+def random_cutout_color(imgs, min_cut=10, max_cut=30):
     """
         args:
         imgs: shape (B,C,H,W)
@@ -147,7 +147,7 @@ def random_flip(images,p=.2):
 
 # random rotation
 
-def random_rotation(images,p=.3):
+def random_rotation(images, p=.3):
     """
         args:
         imgs: torch.tensor shape (B,C,H,W)
@@ -252,7 +252,7 @@ def random_translate(imgs, size, return_random_idxs=False, h1s=None, w1s=None):
 ####################
 ### NEW DATA AUGS
 ####################
-def random_static_cutout(imgs, min_cut=10,max_cut=30):
+def random_static_cutout(imgs, min_cut=10, max_cut=30):
     """
         args:
         imgs: shape (B,C,H,W)
@@ -289,7 +289,7 @@ def random_static_cutout(imgs, min_cut=10,max_cut=30):
 
 
 
-def random_invert_cutout(imgs, min_cut=10,max_cut=30):
+def random_invert_cutout(imgs, min_cut=10, max_cut=30):
     """
         args:
         imgs: shape (B,C,H,W)
@@ -318,7 +318,7 @@ def random_invert_cutout(imgs, min_cut=10,max_cut=30):
 
 
 
-def random_inv_norm_cutout(imgs, min_cut=10,max_cut=30):
+def random_inv_norm_cutout(imgs, min_cut=10, max_cut=30):
     """
         args:
         imgs: shape (B,C,H,W)

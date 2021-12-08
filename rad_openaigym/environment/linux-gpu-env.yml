@@ -20,10 +20,12 @@ dependencies:
 - pytorch=0.4.1
 - scipy=1.0.1
 - patchelf
+- pip
 - pip:
   - cloudpickle==0.5.2
   - gym[all]==0.10.5
   - gitpython==2.1.7
   - gtimer==1.0.0b5
   - pygame==1.9.2
+  - gym-retro
   - ipdb  # technically unnecessary

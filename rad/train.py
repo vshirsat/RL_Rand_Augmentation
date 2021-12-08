@@ -76,6 +76,8 @@ def parse_args():
     parser.add_argument('--detach_encoder', default=False, action='store_true')
     # data augs
     parser.add_argument('--data_augs', default='crop', type=str)
+    parser.add_argument('--min_cut', default=10, type=int)
+    parser.add_argument('--max_cut', default=30, type=int)
 
 
     parser.add_argument('--log_interval', default=100, type=int)
@@ -183,6 +185,10 @@ def make_agent(obs_shape, action_shape, args, device):
 
 def main():
     args = parse_args()
+
+    if args.min_cut >= args.max_cut:
+        raise Exception('min_cut must be strictly less than max_cut')
+
     if args.seed == -1: 
         args.__dict__["seed"] = np.random.randint(1,1000000)
     utils.set_seed_everywhere(args.seed)
@@ -244,6 +250,8 @@ def main():
         device=device,
         image_size=args.image_size,
         pre_image_size=pre_image_size,
+        min_cut=args.min_cut,
+        max_cut=args.max_cut
     )
 
     agent = make_agent(
