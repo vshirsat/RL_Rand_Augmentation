@@ -215,11 +215,11 @@ def main():
     
     # make directory
     ts = time.gmtime() 
-    ts = time.strftime("%m-%d", ts)    
+    ts = time.strftime("%d-%m-%Y_%H-%M-%S")   
     env_name = args.domain_name + '-' + args.task_name
     exp_name = env_name + '-' + ts + '-im' + str(args.image_size) +'-b'  \
     + str(args.batch_size) + '-s' + str(args.seed)  + '-' + args.encoder_type
-    args.work_dir = args.work_dir + '/'  + exp_name
+    args.work_dir = args.work_dir + '/'  + exp_name + '-' + args.data_augs
 
     utils.make_dir(args.work_dir)
     video_dir = utils.make_dir(os.path.join(args.work_dir, 'video'))
